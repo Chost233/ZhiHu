@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">知乎日报</string>
+    <string name="text_slogan">每天三次，每次七分钟</string>
+    <string name="text_home">首页</string>
+    <string name="toolbar_notice">通知</string>
+    <string name="toolbar_night_mode">夜间模式</string>
+    <string name="toolbar_settings">设置选项</string>
+    <string name="nav_home">首页</string>
+    <string name="nav_item_1">电影日报</string>
+    <string name="nav_item_2">互联网安全</string>
+    <string name="nav_item_3">开始游戏</string>
+    <string name="nav_item_4">音乐日报</string>
+    <string name="nav_item_5">动漫日报</string>
+    <string name="nav_item_6">日常心理学</string>
+    <string name="nav_item_7">用户推荐日报</string>
+    <string name="nav_item_8">不许无聊</string>
+    <string name="nav_item_9">设计日报</string>
+    <string name="nav_item_10">大公司日报</string>
+    <string name="nav_item_11">财经日报</string>
+    <string name="nav_item_12">体育日报</string>
+</resources>
