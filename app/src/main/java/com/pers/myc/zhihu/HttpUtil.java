@@ -12,7 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by Administrator on 2017/1/21.
+ * 网络请求相关类
  */
 
 //网络请求类

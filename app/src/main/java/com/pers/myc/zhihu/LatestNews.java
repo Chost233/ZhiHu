@@ -3,10 +3,9 @@ package com.pers.myc.zhihu;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017/2/13.
+ * 网络请求-最新消息Gson类
  */
 
-//网络请求-最新消息Gson类
 public class LatestNews{
     private String date;
     private List<Stories> stories;

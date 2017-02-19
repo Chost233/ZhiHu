@@ -1,7 +1,7 @@
 package com.pers.myc.zhihu;
 
 /**
- * Created by Administrator on 2017/2/14.
+ * 新闻类
  */
 
 public class News {

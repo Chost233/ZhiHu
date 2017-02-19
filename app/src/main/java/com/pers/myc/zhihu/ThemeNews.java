@@ -3,7 +3,7 @@ package com.pers.myc.zhihu;
 import java.util.List;
 
 /**
- * 主题日报gson类
+ * 网络请求-主题消息gson类
  */
 
 public class ThemeNews {

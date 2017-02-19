@@ -1,5 +1,6 @@
 package com.pers.myc.zhihu;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -33,7 +34,12 @@ public class SingleNewsActity extends AppCompatActivity {
         initData();
         //注册显示Fragment
         mFragmentManager.beginTransaction().add(R.id.activity_single_news_frame_layout, mNewFragments.get(0)).commit();
-
+        //标题颜色
+        if (Config.isNightMode()) {
+            mToolbar.setBackgroundColor(Color.parseColor("#222222"));
+        } else {
+            mToolbar.setBackgroundColor(Color.parseColor("#00a1ec"));
+        }
         //显示标题栏左边图标
         if (mActionBar != null) {
             mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -42,9 +48,9 @@ public class SingleNewsActity extends AppCompatActivity {
 
     private void initData() {
         //解析response
-        String response = (String)this.getIntent().getSerializableExtra("response");
+        String response = (String) this.getIntent().getSerializableExtra("response");
         Gson gson = new Gson();
-        SingleNews singleNews = gson.fromJson(response,SingleNews.class);
+        SingleNews singleNews = gson.fromJson(response, SingleNews.class);
         //初始化Frgment列表
         mNewFragments = new ArrayList<SingleNewsFragment>();
         mNewFragments.add(0, new SingleNewsFragment(singleNews.getShare_url()));

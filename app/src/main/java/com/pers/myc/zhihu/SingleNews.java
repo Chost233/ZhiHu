@@ -3,7 +3,7 @@ package com.pers.myc.zhihu;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017/2/16.
+ * 网络请求-新闻展开gson类
  */
 
 public class SingleNews {

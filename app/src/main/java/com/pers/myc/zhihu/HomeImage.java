@@ -1,7 +1,7 @@
 package com.pers.myc.zhihu;
 
 /**
- * Created by Administrator on 2017/1/21.
+ * 网络请求-启动界面图片gson类
  */
 
 //启动界面Gson类

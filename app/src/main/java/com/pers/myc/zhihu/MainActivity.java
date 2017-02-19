@@ -1,5 +1,6 @@
 package com.pers.myc.zhihu;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,12 +15,13 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //标题栏
     Toolbar mToolbar;
@@ -34,9 +36,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     List<Fragment> mContentList;
     //正在展示的Fragment
     Fragment mDisplayFragment;
+    //Fragment展示布局
+    FrameLayout mFrameLayout;
     //主页json信息
     String mResponse;
-
 
 
     @Override
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(mToolbar);
         //显示actionbar左边按钮
         mActionBar = getSupportActionBar();
-            mActionBar.setTitle("今日热闻");
+        mActionBar.setTitle("今日热闻");
         if (mActionBar != null) {
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
@@ -99,8 +102,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.notice:
                 break;
             case R.id.night_mode:
-                break;
-            case R.id.settings:
+                if (!Config.isNightMode()) {
+                    Config.setNightMode(true);
+                    mToolbar.setBackgroundColor(Color.parseColor("#222222"));
+                    mFrameLayout.setBackgroundColor(Color.parseColor("#343434"));
+                } else {
+                    Config.setNightMode(false);
+                    mToolbar.setBackgroundColor(Color.parseColor("#00a1ec"));
+                    mFrameLayout.setBackgroundColor(Color.parseColor("#f2f2f2"));
+                }
                 break;
         }
         return true;
@@ -111,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mToolbar = (Toolbar) findViewById(R.id.activity_main_tool_bar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.activity_main_navigation_view);
+        mFrameLayout = (FrameLayout) findViewById(R.id.activity_main_news_list);
     }
 
     //初始化数据
@@ -151,8 +162,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         WindowManager manager = getWindowManager();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         manager.getDefaultDisplay().getMetrics(displayMetrics);
-        Config.screenHeight = displayMetrics.heightPixels;
-        Config.screenWidth = displayMetrics.widthPixels;
+        Config.setScreenHeight(displayMetrics.heightPixels);
+        Config.setScreenWidth(displayMetrics.widthPixels);
     }
 
     //导航页选项监听
@@ -161,55 +172,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.nav_home:
                 switchFragment("", 0);
-                mActionBar.setTitle(Config.ThemeTitle[0]);
+                mActionBar.setTitle(Config.getThemeTitle()[0]);
                 break;
             case R.id.nav_item_1:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/3", 1);
-                mActionBar.setTitle(Config.ThemeTitle[1]);
+                mActionBar.setTitle(Config.getThemeTitle()[1]);
                 break;
             case R.id.nav_item_2:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/10", 2);
-                mActionBar.setTitle(Config.ThemeTitle[2]);
+                mActionBar.setTitle(Config.getThemeTitle()[2]);
                 break;
             case R.id.nav_item_3:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/2", 3);
-                mActionBar.setTitle(Config.ThemeTitle[3]);
+                mActionBar.setTitle(Config.getThemeTitle()[3]);
                 break;
             case R.id.nav_item_4:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/7", 4);
-                mActionBar.setTitle(Config.ThemeTitle[4]);
+                mActionBar.setTitle(Config.getThemeTitle()[4]);
                 break;
             case R.id.nav_item_5:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/9", 5);
-                mActionBar.setTitle(Config.ThemeTitle[5]);
+                mActionBar.setTitle(Config.getThemeTitle()[5]);
                 break;
             case R.id.nav_item_6:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/13", 6);
-                mActionBar.setTitle(Config.ThemeTitle[6]);
+                mActionBar.setTitle(Config.getThemeTitle()[6]);
                 break;
             case R.id.nav_item_7:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/12", 7);
-                mActionBar.setTitle(Config.ThemeTitle[7]);
+                mActionBar.setTitle(Config.getThemeTitle()[7]);
                 break;
             case R.id.nav_item_8:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/11", 8);
-                mActionBar.setTitle(Config.ThemeTitle[8]);
+                mActionBar.setTitle(Config.getThemeTitle()[8]);
                 break;
             case R.id.nav_item_9:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/4", 9);
-                mActionBar.setTitle(Config.ThemeTitle[9]);
+                mActionBar.setTitle(Config.getThemeTitle()[9]);
                 break;
             case R.id.nav_item_10:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/5", 10);
-                mActionBar.setTitle(Config.ThemeTitle[10]);
+                mActionBar.setTitle(Config.getThemeTitle()[10]);
                 break;
             case R.id.nav_item_11:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/6", 11);
-                mActionBar.setTitle(Config.ThemeTitle[11]);
+                mActionBar.setTitle(Config.getThemeTitle()[11]);
                 break;
             case R.id.nav_item_12:
                 switchFragment("http://news-at.zhihu.com/api/4/theme/8", 12);
-                mActionBar.setTitle(Config.ThemeTitle[12]);
+                mActionBar.setTitle(Config.getThemeTitle()[12]);
                 break;
         }
         return true;

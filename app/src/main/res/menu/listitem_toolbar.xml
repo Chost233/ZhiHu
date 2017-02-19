@@ -11,10 +11,5 @@
         android:id="@+id/night_mode"
         android:icon="@mipmap/ic_night_mode"
         android:title="@string/toolbar_night_mode"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/settings"
-        android:icon="@mipmap/ic_settings"
-        android:title="@string/toolbar_settings"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 </menu>

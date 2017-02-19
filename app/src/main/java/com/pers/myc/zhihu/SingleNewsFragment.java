@@ -11,7 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 /**
- * Created by Administrator on 2017/2/16.
+ * 新闻展开页面Fragment
  */
 
 public class SingleNewsFragment extends Fragment {
