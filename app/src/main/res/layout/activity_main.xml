@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemTextColor="@color/colorItemText"
+        app:itemTextColor="@color/item_coloe_normal"
         app:menu="@menu/listitem_nav"
         app:headerLayout="@layout/nav_header"
         app:theme="@style/ManuTextStyle"

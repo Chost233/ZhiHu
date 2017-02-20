@@ -85,7 +85,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         News news = mNewsList.get(position);
         //item图片
         final Bitmap[] imageBitmap = {null};
-        //为item加载图片-Handler
+        //为item加载图片 -- Handler
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {

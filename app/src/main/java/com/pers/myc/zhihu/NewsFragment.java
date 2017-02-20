@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,7 +29,7 @@ import java.util.Random;
  */
 
 @SuppressLint("ValidFragment")
-public class NewsFragment extends Fragment implements View.OnClickListener {
+public class NewsFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     //header部分
     private ImageView mImageView;
@@ -38,16 +40,20 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
     //json返回数据
     private String mResponse;
     //返回数据类型
-    private int type;
+    private int mType;
     //新闻列表
     private List<News> mNewsList;
     //新闻列表滚动
     private RecyclerView mRecyclerView;
+    //RecyclerView适配器
+    private NewsAdapter mAdapter;
     //recyclerviewheader
     private RecyclerViewHeader mRecyclerViewHeader;
+    //下拉刷新
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
-    //type:
+    //mType:
     //最新消息类型
     public static final int LATEST_NEWS = 0;
     //主题日报类型
@@ -67,11 +73,14 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
     //列表新闻
     private List<LatestNews.Stories> mLStories;
     private List<ThemeNews.Stories> mTStories;
+    //页面url
+    private String mUrl;
 
 
-    public NewsFragment(String mResponse, int type) {
+    public NewsFragment(String mResponse, int type, String url) {
         this.mResponse = mResponse;
-        this.type = type;
+        this.mType = type;
+        this.mUrl = url;
     }
 
     @Override
@@ -85,7 +94,7 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
         //json解析
         Gson gson = new Gson();
         Object analysis = null;
-        switch (type) {
+        switch (mType) {
             case LATEST_NEWS:
                 analysis = gson.fromJson(mResponse, LatestNews.class);
                 break;
@@ -97,16 +106,25 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
         //初始化数据
         initData();
         //数据配置
-        deployData(analysis, type);
+        deployData(analysis, mType);
 
 
         //配置recyclerview
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        NewsAdapter adapter = new NewsAdapter(mNewsList, getActivity());
-        mRecyclerView.setAdapter(adapter);
+        mAdapter = new NewsAdapter(mNewsList, getActivity());
+        mRecyclerView.setAdapter(mAdapter);
         //将header绑定到recyclerview
         mRecyclerViewHeader.attachTo(mRecyclerView);
+
+        //配置下拉刷新
+        mSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_green_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_red_light,
+                android.R.color.holo_orange_light
+        );
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //设置标题
         if (!mHeadText.equals("")) {
@@ -134,7 +152,7 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
             });
         }
         //获取主编头像
-        if (type == THEME_NEWS) {
+        if (mType == THEME_NEWS) {
             for (int i = 0; i < mEditors.size(); i++) {
                 final int finalI = i;
                 HttpUtil.getHttpBitmap(mEditors.get(i).getAvatar(), new BitmapCallBackListener() {
@@ -173,11 +191,13 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
                 mLStories = latestNews.getStories();
                 //配置列表
                 if (mLStories != null) {
+                    ArrayList list = new ArrayList<>();
                     for (int i = 0; i < mLStories.size(); i++) {
-                        mNewsList.add(new News(mLStories.get(i).getTitle(),
+                        list.add(i, new News(mLStories.get(i).getTitle(),
                                 mLStories.get(i).getImages().get(0),
                                 mLStories.get(i).getId()));
                     }
+                    mNewsList = list;
                 }
                 mHeadText = latestNews.getTop_stories().get(randomInt).getTitle();
                 mHeadText2 = "今日热闻";
@@ -192,6 +212,7 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
                 mEditors = themenews.getEditors();
                 //配置列表
                 if (mTStories != null) {
+                    ArrayList list = new ArrayList<>();
                     for (int i = 0; i < mTStories.size(); i++) {
                         News news;
                         if (mTStories.get(i).getImages() == null) {
@@ -203,7 +224,8 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
                                     mTStories.get(i).getImages().get(0),
                                     mTStories.get(i).getId());
                         }
-                        mNewsList.add(news);
+                        list.add(i, news);
+                        mNewsList = list;
                     }
                 }
                 mHeadText = themenews.getDescription();
@@ -225,6 +247,7 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView(View v) {
+        //初始化列表
         mRecyclerView = (RecyclerView) v.findViewById(R.id.fragment_news_recycler_view);
         //设置recyclerview的header
         mRecyclerViewHeader = RecyclerViewHeader.fromXml(this.getContext(), R.layout.recycler_header);
@@ -241,6 +264,8 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
                 (ImageView) view.findViewById(R.id.recycler_header_editor_6),
                 (ImageView) view.findViewById(R.id.recycler_header_editor_7),
         };
+        //初始化下拉刷新
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.fragment_news_swipe_refresh_layout);
         initListener();
     }
 
@@ -253,15 +278,16 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recycler_header_image_view:
-                if (type == LATEST_NEWS && !mHeadStoryId.equals("")) {
+                if (mType == LATEST_NEWS && !mHeadStoryId.equals("")) {
                     String url = "http://news-at.zhihu.com/api/4/news/" + mHeadStoryId;
                     HttpUtil.sendHtttpRequest(url, new HttpCallbackListener() {
                         @Override
                         public void onFinish(String response, InputStream inputStream) {
-                            Intent intent = new Intent(getActivity(),SingleNewsActity.class);
-                            intent.putExtra("response",response);
+                            Intent intent = new Intent(getActivity(), SingleNewsActity.class);
+                            intent.putExtra("response", response);
                             getActivity().startActivity(intent);
                         }
+
                         @Override
                         public void onError(Exception e) {
 
@@ -270,4 +296,50 @@ public class NewsFragment extends Fragment implements View.OnClickListener {
                 }
         }
     }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+                refreshTheData();
+            }
+        }, 1000);
+    }
+
+    //刷新列表
+    public void refreshTheData() {
+        HttpUtil.sendHtttpRequest(this.mUrl, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response, InputStream inputStream) {
+
+                Gson gson = new Gson();
+                Object analysis = null;
+                switch (mType) {
+                    case LATEST_NEWS:
+                        analysis = gson.fromJson(mResponse, LatestNews.class);
+                        break;
+                    case THEME_NEWS:
+                        analysis = gson.fromJson(mResponse, ThemeNews.class);
+                        break;
+                }
+                Log.e("number", mNewsList.size() + "");
+                deployData(analysis, mType);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("number", mNewsList.size() + "");
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+    }
 }
+

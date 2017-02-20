@@ -7,7 +7,7 @@
     android:layout_marginBottom="15dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:background="@drawable/item_background_normal">
+    android:background="@drawable/item_background">
 
     <ImageView
         android:id="@+id/item_news_image_view"

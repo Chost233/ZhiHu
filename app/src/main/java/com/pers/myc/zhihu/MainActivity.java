@@ -1,8 +1,12 @@
 package com.pers.myc.zhihu;
 
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -24,22 +29,24 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //标题栏
-    Toolbar mToolbar;
-    ActionBar mActionBar;
+    private Toolbar mToolbar;
+    private ActionBar mActionBar;
     //左侧滑栏
-    DrawerLayout mDrawerLayout;
+    private DrawerLayout mDrawerLayout;
     //左侧滑栏布局
-    NavigationView mNavigationView;
+    private NavigationView mNavigationView;
     //Fragment管理器
-    FragmentManager mFragmentManager;
+    private FragmentManager mFragmentManager;
     //展示Fragment
-    List<Fragment> mContentList;
+    private List<Fragment> mContentList;
     //正在展示的Fragment
-    Fragment mDisplayFragment;
+    private Fragment mDisplayFragment;
     //Fragment展示布局
-    FrameLayout mFrameLayout;
+    private FrameLayout mFrameLayout;
     //主页json信息
-    String mResponse;
+    private String mResponse;
+    //URL
+    private String mURL;
 
 
     @Override
@@ -71,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mActionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
         }
         //添加Fragment到列表
-        mContentList.add(0, new NewsFragment(mResponse, NewsFragment.LATEST_NEWS));
+        mContentList.add(0, new NewsFragment(mResponse, NewsFragment.LATEST_NEWS, "http://news-at.zhihu.com/api/4/news/latest"));
         //获取fragment管理器
         mFragmentManager = getSupportFragmentManager();
         //注册显示主页fragment
@@ -93,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     //监听标题栏按钮点击事件
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -101,15 +109,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.notice:
                 break;
+            //切换夜间模式
             case R.id.night_mode:
                 if (!Config.isNightMode()) {
                     Config.setNightMode(true);
                     mToolbar.setBackgroundColor(Color.parseColor("#222222"));
                     mFrameLayout.setBackgroundColor(Color.parseColor("#343434"));
+                    Resources resources = (Resources)getBaseContext().getResources();
+                    ColorStateList csl = (ColorStateList)resources.getColorStateList(R.color.item_color_nightmode, null);
+                    mNavigationView.setItemTextColor(csl);
+                    mNavigationView.setBackgroundColor(Color.parseColor("#343434"));
+                    View v = mNavigationView.getHeaderView(0);
+                    v.findViewById(R.id.nav_header_layout).setBackgroundColor(Color.parseColor("#252525"));
+
                 } else {
                     Config.setNightMode(false);
                     mToolbar.setBackgroundColor(Color.parseColor("#00a1ec"));
                     mFrameLayout.setBackgroundColor(Color.parseColor("#f2f2f2"));
+                    Resources resources = (Resources)getBaseContext().getResources();
+                    ColorStateList csl = (ColorStateList)resources.getColorStateList(R.color.item_coloe_normal, null);
+                    mNavigationView.setItemTextColor(csl);
+                    mNavigationView.setBackgroundColor(Color.parseColor("#f9f9f9"));
+                    View v = mNavigationView.getHeaderView(0);
+                    v.findViewById(R.id.nav_header_layout).setBackgroundColor(Color.parseColor("#01a0eb"));
                 }
                 break;
         }
@@ -131,15 +153,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mContentList.add(null);
         }
         mResponse = (String) getIntent().getExtras().get("Response");
+        mURL = (String) getIntent().getExtras().get("URL");
     }
 
     //切换framgent
-    private void switchFragment(String url, final int position) {
+    private void switchFragment(final String url, final int position) {
         if (mContentList.get(position) == null) {
             HttpUtil.sendHtttpRequest(url, new HttpCallbackListener() {
                 @Override
                 public void onFinish(String response, InputStream inputStream) {
-                    Fragment fragment = new NewsFragment(response, NewsFragment.THEME_NEWS);
+                    Fragment fragment = new NewsFragment(response, NewsFragment.THEME_NEWS, url);
                     mContentList.add(position, fragment);
                     mFragmentManager.beginTransaction().hide(mDisplayFragment).commit();
                     mFragmentManager.beginTransaction().add(R.id.activity_main_news_list, mContentList.get(position)).commit();

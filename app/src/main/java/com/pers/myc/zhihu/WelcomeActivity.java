@@ -23,6 +23,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private final Context THIS = this;
     private LinearLayout mText;
     private String mResponse;
+    private static final String URL = "http://news-at.zhihu.com/api/4/news/latest";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class WelcomeActivity extends AppCompatActivity {
         };
 
         //网络请求最新消息
-        HttpUtil.sendHtttpRequest("http://news-at.zhihu.com/api/4/news/latest", new HttpCallbackListener() {
+        HttpUtil.sendHtttpRequest(URL, new HttpCallbackListener() {
             @Override
             public void onFinish(String response, InputStream inputStream) {
                 Gson gson = new Gson();
@@ -101,6 +102,7 @@ public class WelcomeActivity extends AppCompatActivity {
                             Thread.sleep(2000);
                             Intent intent = new Intent(THIS, MainActivity.class);
                             intent.putExtra("Response", mResponse);
+                            intent.putExtra("URL", URL);
                             startActivity(intent);
                         } catch (InterruptedException e) {
                         }
