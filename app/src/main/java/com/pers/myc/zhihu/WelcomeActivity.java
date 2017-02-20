@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -32,14 +33,16 @@ public class WelcomeActivity extends AppCompatActivity {
 
         //初始化ImageView
         final ImageView mImageView = (ImageView) findViewById(R.id.activity_welcome_image_view);
+        //初始化TextView
+        final TextView mTextView = (TextView)findViewById(R.id.activity_welcome_text_view);
         //网络请求获取启动界面
-        HttpUtil.sendHtttpRequest("http://news-at.zhihu.com/api/4/start-image/480*728", new HttpCallbackListener() {
+        HttpUtil.sendHtttpRequest("https://news-at.zhihu.com/api/7/prefetch-launch-images/480*728", new HttpCallbackListener() {
             @Override
             public void onFinish(String response, InputStream inputStream) {
                 //json解析
                 Gson gson = new Gson();
-                HomeImage homeImage = gson.fromJson(response, HomeImage.class);
-                HttpUtil.getHttpBitmap(homeImage.getImg(), new BitmapCallBackListener() {
+                final HomeImage homeImage = gson.fromJson(response, HomeImage.class);
+                HttpUtil.getHttpBitmap(homeImage.getCreatives().get(0).getUrl(), new BitmapCallBackListener() {
                     @Override
                     public void onFinish(final Bitmap bitmap) {
                         //在UI线程修改图片
@@ -48,6 +51,7 @@ public class WelcomeActivity extends AppCompatActivity {
                             public void run() {
                                 if (bitmap != null) {
                                     mImageView.setImageBitmap(bitmap);
+                                    mTextView.setText(homeImage.getCreatives().get(0).getText());
                                 }
                             }
                         });
