@@ -1,7 +1,10 @@
-package com.pers.myc.zhihu;
+package com.pers.myc.zhihu.untils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.pers.myc.zhihu.listener.BitmapCallBackListener;
+import com.pers.myc.zhihu.listener.HttpCallbackListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,7 +63,7 @@ public class HttpUtil {
             @Override
             public void run() {
                 URL myFileURL;
-                Bitmap bitmap = null;
+                Bitmap bitmap;
                 try {
                     myFileURL = new URL(url);
                     //获得连接

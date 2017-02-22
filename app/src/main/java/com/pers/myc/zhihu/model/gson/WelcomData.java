@@ -1,4 +1,6 @@
-package com.pers.myc.zhihu;
+package com.pers.myc.zhihu.model.gson;
+
+import android.graphics.Bitmap;
 
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
  */
 
 //启动界面Gson类
-public class HomeImage {
+public class WelcomData {
     private List<Creatives> creatives;
 
     public List<Creatives> getCreatives() {
@@ -21,7 +23,14 @@ public class HomeImage {
         private List<String> impression_tracks;
         private String type;
         private String id;
+        private Bitmap image = null;
 
+        public Bitmap getImage() {
+            return image;
+        }
+        public void setImage(Bitmap image) {
+            this.image = image;
+        }
         public String getUrl() {
             return url;
         }

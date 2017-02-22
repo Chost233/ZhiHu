@@ -1,4 +1,4 @@
-package com.pers.myc.zhihu;
+package com.pers.myc.zhihu.control.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.pers.myc.zhihu.R;
+import com.pers.myc.zhihu.listener.BitmapCallBackListener;
+import com.pers.myc.zhihu.listener.HttpCallbackListener;
+import com.pers.myc.zhihu.model.News;
+import com.pers.myc.zhihu.untils.HttpUtil;
+import com.pers.myc.zhihu.view.SingleNewsActity;
 
 import java.io.InputStream;
 import java.util.List;
@@ -33,7 +40,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         TextView newsTitle;
         RelativeLayout layout;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             newsView = itemView;
             newsImage = (ImageView) itemView.findViewById(R.id.item_news_image_view);

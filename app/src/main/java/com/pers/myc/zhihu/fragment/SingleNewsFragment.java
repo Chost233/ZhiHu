@@ -1,4 +1,4 @@
-package com.pers.myc.zhihu;
+package com.pers.myc.zhihu.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.pers.myc.zhihu.R;
 
 /**
  * 新闻展开页面Fragment
@@ -42,7 +44,7 @@ public class SingleNewsFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
 
-                if (url.toString().indexOf("http://daily.zhihu.com/story/") != -1) {
+                if (url.contains("http://daily.zhihu.com/story/")) {
                     Log.e("url:", url + "");
                     String javascript = "javascript:function hideOther() {" +
                             "document.getElementsByClassName('global-header')[0].style.display='none';" +

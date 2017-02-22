@@ -1,4 +1,4 @@
-package com.pers.myc.zhihu;
+package com.pers.myc.zhihu.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,7 +17,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
-import com.google.gson.Gson;
+import com.pers.myc.zhihu.R;
+import com.pers.myc.zhihu.control.adapters.NewsAdapter;
+import com.pers.myc.zhihu.listener.BitmapCallBackListener;
+import com.pers.myc.zhihu.listener.HttpCallbackListener;
+import com.pers.myc.zhihu.model.News;
+import com.pers.myc.zhihu.model.gson.LatestNews;
+import com.pers.myc.zhihu.model.gson.ThemeNews;
+import com.pers.myc.zhihu.untils.GsonUtil;
+import com.pers.myc.zhihu.untils.HttpUtil;
+import com.pers.myc.zhihu.view.SingleNewsActity;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -92,14 +101,13 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Swip
         //初始化视图
         initView(v);
         //json解析
-        Gson gson = new Gson();
         Object analysis = null;
         switch (mType) {
             case LATEST_NEWS:
-                analysis = gson.fromJson(mResponse, LatestNews.class);
+                analysis = GsonUtil.analysis(mResponse, LatestNews.class);
                 break;
             case THEME_NEWS:
-                analysis = gson.fromJson(mResponse, ThemeNews.class);
+                analysis = GsonUtil.analysis(mResponse, ThemeNews.class);
                 break;
         }
 
@@ -314,25 +322,24 @@ public class NewsFragment extends Fragment implements View.OnClickListener, Swip
             @Override
             public void onFinish(String response, InputStream inputStream) {
 
-                Gson gson = new Gson();
                 Object analysis = null;
                 switch (mType) {
                     case LATEST_NEWS:
-                        analysis = gson.fromJson(mResponse, LatestNews.class);
+                        analysis = GsonUtil.analysis(mResponse, LatestNews.class);
                         break;
                     case THEME_NEWS:
-                        analysis = gson.fromJson(mResponse, ThemeNews.class);
+                        analysis = GsonUtil.analysis(mResponse, ThemeNews.class);
                         break;
                 }
                 Log.e("number", mNewsList.size() + "");
                 deployData(analysis, mType);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e("number", mNewsList.size() + "");
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    });
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("number", mNewsList.size() + "");
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
             }
 
             @Override

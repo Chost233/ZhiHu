@@ -1,4 +1,4 @@
-package com.pers.myc.zhihu;
+package com.pers.myc.zhihu.model.gson;
 
 import java.util.List;
 

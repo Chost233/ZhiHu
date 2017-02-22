@@ -13,20 +13,20 @@
 
         <!-- 首页 -->
         <activity
-            android:name=".MainActivity"
+            android:name=".view.HomeActivity"
             android:label="@string/text_home"
             android:theme="@style/NoTitleWindow">
         </activity>
         <!-- 启动界面 -->
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".view.WelcomeActivity"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SingleNewsActity"
+        <activity android:name=".view.SingleNewsActity"
             android:label=""
             android:theme="@style/NoTitleWindow">
 

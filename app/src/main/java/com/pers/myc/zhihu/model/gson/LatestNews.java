@@ -1,4 +1,6 @@
-package com.pers.myc.zhihu;
+package com.pers.myc.zhihu.model.gson;
+
+import android.graphics.Bitmap;
 
 import java.util.List;
 
@@ -12,109 +14,82 @@ public class LatestNews{
     private List<TopStories> top_stories;
 
     public static class Stories {
-        List<String> images;
-        String type;
-        String id;
-        String ga_prefix;
-        String title;
+        private List<String> images;
+        private String type;
+        private String id;
+        private String ga_prefix;
+        private String title;
 
         public String getType() {
             return type;
         }
-
         public void setType(String type) {
             this.type = type;
         }
-
         public String getId() {
             return id;
         }
-
         public void setId(String id) {
             this.id = id;
         }
-
         public String getGa_prefix() {
             return ga_prefix;
         }
-
         public void setGa_prefix(String ga_prefix) {
             this.ga_prefix = ga_prefix;
         }
-
         public String getTitle() {
             return title;
         }
-
         public void setTitle(String title) {
             this.title = title;
         }
-
         public List<String> getImages() {
             return images;
         }
-
         public void setImages(List<String> images) {
             this.images = images;
         }
     }
 
     public static class TopStories{
-        String image;
-        String type;
-        String id;
-        String ga_perfix;
-        String title;
+        private String image;
+        private String type;
+        private String id;
+        private String ga_perfix;
+        private String title;
+        private Bitmap topImage;
+
+        public Bitmap getTopImage() {
+            return topImage;
+        }
+        public void setTopImage(Bitmap topImage) {
+            this.topImage = topImage;
+        }
 
         public String getImage() {
             return image;
         }
-
         public void setImage(String image) {
             this.image = image;
         }
-
         public String getType() {
             return type;
         }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
         public String getId() {
             return id;
         }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
         public String getGa_perfix() {
             return ga_perfix;
         }
-
-        public void setGa_perfix(String ga_perfix) {
-            this.ga_perfix = ga_perfix;
-        }
-
         public String getTitle() {
             return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
         }
     }
 
     public String getDate() {
         return date;
     }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public List<Stories> getStories() {
         return stories;
     }
