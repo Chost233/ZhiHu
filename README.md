@@ -12,5 +12,6 @@
 ![image](https://github.com/Chost233/ZhiHu/raw/master/screnshots/Screenshot_2017-02-23-02-36-59_com.pers.myc.zhihu.png?raw=true)
 ![image](https://github.com/Chost233/ZhiHu/raw/master/screnshots/Screenshot_2017-02-23-02-37-01_com.pers.myc.zhihu.png?raw=true)
 ##其他功能实现
-下拉刷新
-登陆功能不可用
+可下拉刷新
+##未实现
+登陆功能
