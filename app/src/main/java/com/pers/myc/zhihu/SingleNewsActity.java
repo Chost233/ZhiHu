@@ -7,9 +7,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,10 @@ public class SingleNewsActity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     //新闻Fragment
     private List<SingleNewsFragment> mNewFragments;
+    //点赞数
+    private TextView mTextViewLike;
+    //评论数
+    private TextView mTextViewComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +55,31 @@ public class SingleNewsActity extends AppCompatActivity {
     private void initData() {
         //解析response
         String response = (String) this.getIntent().getSerializableExtra("response");
-        Gson gson = new Gson();
+        final Gson gson = new Gson();
         SingleNews singleNews = gson.fromJson(response, SingleNews.class);
+        //设置评论数和点赞数
+        HttpUtil.sendHtttpRequest("http://news-at.zhihu.com/api/4/story-extra/" + singleNews.getId(), new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response, InputStream inputStream) {
+                final NewsExtra newsExtra = gson.fromJson(response, NewsExtra.class);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTextViewLike.setText(newsExtra.getPopularity());
+                        mTextViewComment.setText(newsExtra.getComments());
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
         //初始化Frgment列表
-        mNewFragments = new ArrayList<SingleNewsFragment>();
+        mNewFragments = new ArrayList<>();
         mNewFragments.add(0, new SingleNewsFragment(singleNews.getShare_url()));
+
         //初始化Fragment管理器
         mFragmentManager = getSupportFragmentManager();
     }
@@ -76,5 +102,9 @@ public class SingleNewsActity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         //获取ActoinBar
         mActionBar = getSupportActionBar();
+        //点赞数
+        mTextViewLike = (TextView) findViewById(R.id.activity_single_news_text_view_like);
+        //评论数
+        mTextViewComment = (TextView) findViewById(R.id.activity_single_news_text_view_comment);
     }
 }
